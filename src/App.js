@@ -1,4 +1,5 @@
 var React = require('react');
+var UserStore = require('./user/UserStore');
 var RouterStore = require('./router/RouterStore');
 var RouterService = require('./router/RouterService');
 var RouterActions = require('./router/RouterActions');
@@ -8,33 +9,44 @@ var NotFoundPage = require('./pages/NotFoundPage');
 var NavLink = require('./components/NavLink');
 var Logout = require('./components/Logout');
 
-// Should this glue code belong here?
-RouterService.onRouteChange = function(route) {
-  RouterActions.navigateTo(route);
-};
+// NOTE: Should this glue code belong here?
+RouterService.setup({
+  paths: [
+    '/',
+    '/login',
+    '/about',
+    '/dashboard',
+    '/account',
+    '/404'
+  ],
+  noAuthPaths: ['/login', '/about'],
+  defaultAuthPath: '/dashboard',
+  defaultNoAuthPath: '/login',
+  notFoundPath: '/404',
+  onChange: function(uri, route) {
+    RouterActions.navigateTo(route);
+  }
+});
+
 
 var App = React.createClass({
   getInitialState: function() {
     return {
-      route: RouterStore.get('route'),
-      rejectedUri: RouterStore.rejectedUri()
+      route: RouterStore.get('route')
     };
   },
 
   componentWillMount: function () {
     RouterStore.on('changed:route', this.handleRouteChange);
-    RouterStore.on('changed:rejectedRoute', this.handleRouteChange);
   },
 
   componentWillUnmount: function () {
     RouterStore.removeListener('changed:route', this.handleRouteChange);
-    RouterStore.removeListener('changed:rejectedRoute', this.handleRouteChange);
   },
 
   handleRouteChange: function() {
     this.setState({
-      route: RouterStore.get('route'),
-      rejectedUri: RouterStore.rejectedUri()
+      route: RouterStore.get('route')
     });
   },
 
@@ -51,7 +63,7 @@ var App = React.createClass({
 
   renderContent: function(path) {
     if (path === '/404') {
-      return <NotFoundPage uri={this.state.rejectedUri} />
+      return <NotFoundPage />
     }
 
     if (path === '/login') {

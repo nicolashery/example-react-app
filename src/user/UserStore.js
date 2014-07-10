@@ -1,5 +1,6 @@
 var Flux = require('fluxy');
 var UserConstants = require('./UserConstants');
+var RouterActions = require('../router/RouterActions');
 
 module.exports = Flux.createStore({
   getInitialState: function() {
@@ -24,6 +25,8 @@ module.exports = Flux.createStore({
       this.set('token', payload.token);
       this.set('user', payload.user);
       this.set('loggingIn', false);
+
+      RouterActions.redirectAfterLogin();
     }],
 
     handleLoginFail: [UserConstants.LOGIN_FAIL, function(payload) {
@@ -40,6 +43,8 @@ module.exports = Flux.createStore({
       this.set('token', null);
       this.set('user', null);
       this.set('loggingOut', false);
+
+      RouterActions.redirectAfterLogout();
     }],
 
     handleLogoutFail: [UserConstants.LOGOUT_FAIL, function(payload) {

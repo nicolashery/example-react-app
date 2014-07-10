@@ -1,8 +1,6 @@
 var Flux = require('fluxy');
 var UserConstants = require('./UserConstants');
 var UserService = require('./UserService');
-var RouterActions = require('../router/RouterActions');
-var RouterService = require('../router/RouterService');
 
 module.exports = Flux.createActions({
   login: function (username, password) {
@@ -15,7 +13,6 @@ module.exports = Flux.createActions({
           token: result.token,
           user: result.user
         });
-        RouterActions.navigateTo(RouterService.defaultAuthRoute());
       }.bind(this))
       .catch(function (err) {
         self.dispatchAction(UserConstants.LOGIN_FAIL, {error: err});
@@ -29,7 +26,6 @@ module.exports = Flux.createActions({
     UserService.logout(token)
       .then(function (result) {
         self.dispatchAction(UserConstants.LOGOUT_SUCCESS);
-        RouterActions.navigateTo(RouterService.defaultNoAuthRoute());
       }.bind(this))
       .catch(function (err) {
         self.dispatchAction(UserConstants.LOGOUT_FAIL, {error: err});

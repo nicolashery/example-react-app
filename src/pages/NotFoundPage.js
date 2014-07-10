@@ -5,7 +5,7 @@ var NotFoundPage = React.createClass({
     return (
       <div>
         <h1>Not found</h1>
-        <p>Could not find: <strong>{this.props.uri}</strong></p>
+        <p>Sorry! Could not find what you were looking for...</p>
       </div>
     );
   }
