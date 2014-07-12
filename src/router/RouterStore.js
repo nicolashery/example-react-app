@@ -75,5 +75,13 @@ module.exports = Flux.createStore({
         RouterActions.navigateTo(RouterService.defaultNoAuthRoute());
       }
     ]
+  },
+
+  redirectAfterLoginUri: function() {
+    var route = this.get('redirectAfterLogin');
+    if (!route) {
+      return null;
+    }
+    return RouterService._uriFromRoute(route);
   }
 });

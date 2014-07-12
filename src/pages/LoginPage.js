@@ -1,29 +1,35 @@
 var React = require('react');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
+var RouterStore = require('../router/RouterStore');
 
 var LoginPage = React.createClass({
   getInitialState: function() {
     return {
       loggingIn:  UserStore.get('loggingIn'),
-      errorMessage: UserStore.errorMessage()
+      errorMessage: UserStore.errorMessage(),
+      redirectUri: RouterStore.redirectAfterLoginUri()
     };
   },
 
   componentWillMount: function () {
-    UserStore.on('changed:loggingIn', this.handleStoreChange);
-    UserStore.on('changed:error', this.handleStoreChange);
+    UserStore.on('changed:loggingIn', this.handleUserStoreChange);
+    UserStore.on('changed:error', this.handleUserStoreChange);
+    RouterStore.on('changed:redirectAfterLogin', this.handleRouterStoreChange);
   },
 
   componentWillUnmount: function () {
-    UserStore.removeListener('changed:loggingIn', this.handleStoreChange);
-    UserStore.removeListener('changed:error', this.handleStoreChange);
+    UserStore.removeListener('changed:loggingIn', this.handleUserStoreChange);
+    UserStore.removeListener('changed:error', this.handleUserStoreChange);
+    RouterStore.removeListener('changed:redirectAfterLogin',
+      this.handleRouterStoreChange);
   },
 
   render: function() {
     return (
       <div>
         <h1>Login</h1>
+        {this.renderRedirectMessage()}
         <p>Hint: demo/demo</p>
         <form>
           <p><input ref="username" placeholder="username"/></p>
@@ -49,6 +55,20 @@ var LoginPage = React.createClass({
     );
   },
 
+  renderRedirectMessage: function() {
+    var uri = this.state.redirectUri;
+    if (!uri) {
+      return null;
+    }
+
+    return (
+      <p>
+        {'After logging in you will be redirected to '}
+        <strong>{uri}</strong>
+      </p>
+    );
+  },
+
   handleLogin: function(e) {
     e.preventDefault();
     var username = this.refs.username.getDOMNode().value;
@@ -56,10 +76,16 @@ var LoginPage = React.createClass({
     UserActions.login(username, password);
   },
 
-  handleStoreChange: function() {
+  handleUserStoreChange: function() {
     this.setState({
       loggingIn: UserStore.get('loggingIn'),
       errorMessage: UserStore.errorMessage()
+    });
+  },
+
+  handleRouterStoreChange: function() {
+    this.setState({
+      redirectUri: RouterStore.redirectAfterLoginUri()
     });
   }
 });
