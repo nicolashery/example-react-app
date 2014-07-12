@@ -82,6 +82,6 @@ module.exports = Flux.createStore({
     if (!route) {
       return null;
     }
-    return RouterService._uriFromRoute(route);
+    return RouterService.uriFromRoute(route);
   }
 });

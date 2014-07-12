@@ -11,7 +11,7 @@ var Logout = require('./components/Logout');
 
 // NOTE: Should this glue code belong here?
 RouterService.setup({
-  paths: [
+  matchedPaths: [
     '/',
     '/login',
     '/about',
