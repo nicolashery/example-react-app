@@ -1,3 +1,36 @@
+/*
+The following `path`:
+
+```
+/item/:id
+```
+
+Will produce the `matcher` object:
+
+```javascript
+{
+  path: '/item/:id',
+  regexp: /^\/item\/([^\\/]+?)(?:\/(?=$))?$/i,
+  keys: [{name: 'id'}]
+}
+```
+
+Which can be used to match a `pattern` (i.e. a `uri` without the query string):
+
+```javascript
+matchWithRegexp([matcher], '/item/123')
+//-> returns the `matcher`
+```
+
+Or match the `path` itself:
+
+```javascript
+matchWithPath([matcher], '/item/:id')
+//-> returns the `matcher`
+```
+
+*/
+
 var regexpFromPath = require('path-to-regexp');
 var helpers = require('./helpers');
 

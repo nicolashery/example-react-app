@@ -1,3 +1,24 @@
+/*
+The following `queryString`:
+
+```
+details=true&user[name]=bob
+```
+
+Gets parsed to produce the `query` object:
+
+```javascript
+{
+  details: 'true',
+  user: {name: 'bob'}
+}
+```
+
+(And vice-versa, the above `query` object can be stringified to produce the
+`queryString`.)
+
+*/
+
 var qs = require('qs');
 var helpers = require('./helpers');
 

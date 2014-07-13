@@ -1,3 +1,8 @@
+/*
+A set of functions to interact with the browser environment.
+
+*/
+
 var helpers = require('./helpers');
 
 var browser = {};

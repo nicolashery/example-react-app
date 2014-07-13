@@ -1,3 +1,25 @@
+/*
+A `route` object looks like:
+
+```javascript
+{
+  path: '/list/:id/items',
+  params: {id: '123'},
+  query: {sort: 'ascending'}
+}
+```
+
+The above route will produce the `uri`:
+
+```
+/list/123/items?sort=ascending
+```
+
+(And vice-versa, with the proper `matcher`, the above `uri` can be parsed
+and produce the `route` object.)
+
+*/
+
 var Params = require('./Params');
 var Query = require('./Query');
 

@@ -1,3 +1,30 @@
+/*
+The following `params` object:
+
+```javascript
+{
+  userId: '123',
+  taskId: '456'
+}
+```
+
+Gets injected into the `path`:
+
+```
+/user/:userId/task/:taskId
+```
+
+To produce the `pattern`:
+
+```
+/user/123/task/456
+```
+
+(And vice-versa, with the proper `matcher` object, the `params` will get
+extracted from the above `pattern`.)
+
+*/
+
 var helpers = require('./helpers');
 var browser = require('./browser');
 
