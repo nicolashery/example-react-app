@@ -84,14 +84,24 @@ var router = {
 
   updateBrowserUri: function(route, options) {
     options = options || {};
-    var uri = this.uriFromRoute(route);
+    var currentUri = browser.getCurrentUri();
+    var newUri = this.uriFromRoute(route);
+    
+    if (newUri === currentUri) {
+      // Will not fire browser's hash change handler
+      // and there is no need to update anyway
+      return;
+    }
+
+    // Will fire browser's hash change handler,
+    // but we just want to do a "silent" update
     this._skipNextOnChangeHandler = true;
 
     if (options.replace) {
-      browser.replaceUri(uri);
+      browser.replaceUri(newUri);
     }
     else {
-      browser.setUri(uri);
+      browser.setUri(newUri);
     }
   },
 
@@ -104,8 +114,10 @@ var router = {
   },
 
   _onUriChange: function() {
+    console.log('_onUriChange', window.location.hash);
     if (this._skipNextOnChangeHandler) {
       this._skipNextOnChangeHandler = false;
+      console.log('_onUriChange', 'skipping');
       return;
     }
 
@@ -136,5 +148,7 @@ var router = {
     Query: Query
   }
 };
+
+window.router = router;
 
 module.exports = router;
