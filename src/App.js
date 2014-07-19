@@ -38,14 +38,14 @@ var App = React.createClass({
     return assign(this.getUserStoreState(), this.getRouterStoreState());
   },
 
-  componentWillMount: function () {
-    debug('mount');
+  componentDidMount: function () {
+    debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
     RouterStore.addWatch(this.handleRouterStoreChange);
   },
 
   componentWillUnmount: function () {
-    debug('unmount');
+    debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
     RouterStore.removeWatch(this.handleRouterStoreChange);
   },

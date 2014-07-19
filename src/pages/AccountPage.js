@@ -13,13 +13,13 @@ var AccountPage = React.createClass({
     }, this.getUserStoreState());
   },
 
-  componentWillMount: function () {
-    debug('mount');
+  componentDidMount: function () {
+    debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
   },
 
   componentWillUnmount: function () {
-    debug('unmount');
+    debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
   },
 
