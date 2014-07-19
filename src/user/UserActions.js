@@ -1,8 +1,8 @@
-var Flux = require('fluxy');
+var Fluxy = require('fluxy');
 var UserConstants = require('./UserConstants');
 var UserService = require('./UserService');
 
-module.exports = Flux.createActions({
+module.exports = Fluxy.createActions({
   login: function (username, password) {
     var self = this;
     self.dispatchAction(UserConstants.LOGIN, {username: username});
@@ -13,10 +13,10 @@ module.exports = Flux.createActions({
           token: result.token,
           user: result.user
         });
-      }.bind(this))
+      })
       .catch(function (err) {
         self.dispatchAction(UserConstants.LOGIN_FAIL, {error: err});
-      }.bind(this));
+      });
   },
 
   logout: function (token) {
@@ -26,9 +26,9 @@ module.exports = Flux.createActions({
     UserService.logout(token)
       .then(function (result) {
         self.dispatchAction(UserConstants.LOGOUT_SUCCESS);
-      }.bind(this))
+      })
       .catch(function (err) {
         self.dispatchAction(UserConstants.LOGOUT_FAIL, {error: err});
-      }.bind(this));
+      });
   }
 });

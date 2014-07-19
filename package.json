@@ -15,10 +15,11 @@
   "private": true,
   "dependencies": {
     "bluebird": "^2.2.1",
-    "enum": "^0.2.6",
+    "debug": "^1.0.4",
     "envify": "^1.2.1",
-    "fluxy": "^0.2.0",
+    "fluxy": "^0.3.0",
     "fn.js": "^0.8.1",
+    "lodash-node": "^2.4.1",
     "path-to-regexp": "^0.2.2",
     "qs": "^0.6.6",
     "react": "^0.10.0"

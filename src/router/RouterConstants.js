@@ -1,7 +1,11 @@
-var Enum = require('enum');
+var Fluxy = require('fluxy');
 
-module.exports = new Enum([
+var RouterConstants = Fluxy.createConstants({
+  messages: [
     'ROUTE_CHANGE',
     'REDIRECT_AFTER_LOGIN',
     'REDIRECT_AFTER_LOGOUT'
-]);
+  ]
+});
+
+module.exports = RouterConstants;

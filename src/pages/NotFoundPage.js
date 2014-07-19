@@ -1,7 +1,10 @@
 var React = require('react');
 
+var debug = require('debug')('app:NotFoundPage');
+
 var NotFoundPage = React.createClass({
   render: function() {
+    debug('render');
     return (
       <div>
         <h1>Not found</h1>

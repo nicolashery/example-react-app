@@ -1,6 +1,7 @@
-var Enum = require('enum');
+var Fluxy = require('fluxy');
 
-module.exports = new Enum([
+var UserConstants = Fluxy.createConstants({
+  messages: [
     'LOGIN',
     'LOGIN_SUCCESS',
     'LOGIN_FAIL',
@@ -8,4 +9,7 @@ module.exports = new Enum([
     'LOGOUT',
     'LOGOUT_SUCCESS',
     'LOGOUT_FAIL'
-]);
+  ]
+});
+
+module.exports = UserConstants;

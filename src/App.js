@@ -1,5 +1,8 @@
 var React = require('react');
+var $ = require('fluxy').$;
+var assign = require('lodash-node/modern/objects/assign');
 var UserStore = require('./user/UserStore');
+var UserActions = require('./user/UserActions');
 var RouterStore = require('./router/RouterStore');
 var RouterService = require('./router/RouterService');
 var RouterActions = require('./router/RouterActions');
@@ -7,7 +10,8 @@ var LoginPage = require('./pages/LoginPage');
 var AccountPage = require('./pages/AccountPage');
 var NotFoundPage = require('./pages/NotFoundPage');
 var NavLink = require('./components/NavLink');
-var Logout = require('./components/Logout');
+
+var debug = require('debug')('app:App');
 
 // NOTE: Should this glue code belong here?
 RouterService.setup({
@@ -24,34 +28,53 @@ RouterService.setup({
   defaultNoAuthPath: '/login',
   notFoundPath: '/404',
   onChange: function(uri, route) {
+    debug('uri change', uri);
     RouterActions.navigateTo(route);
   }
 });
 
-
 var App = React.createClass({
   getInitialState: function() {
+    return assign(this.getUserStoreState(), this.getRouterStoreState());
+  },
+
+  componentWillMount: function () {
+    debug('mount');
+    UserStore.addWatch(this.handleUserStoreChange);
+    RouterStore.addWatch(this.handleRouterStoreChange);
+  },
+
+  componentWillUnmount: function () {
+    debug('unmount');
+    UserStore.removeWatch(this.handleUserStoreChange);
+    RouterStore.removeWatch(this.handleRouterStoreChange);
+  },
+
+  handleUserStoreChange: function() {
+    debug('handleUserStoreChange');
+    this.setState(this.getUserStoreState());
+  },
+
+  getUserStoreState: function() {
+    return {
+      loggingOut: UserStore.get('loggingOut')
+    };
+  },
+
+  handleRouterStoreChange: function() {
+    debug('handleRouterStoreChange');
+    this.setState(this.getRouterStoreState());
+  },
+
+  getRouterStoreState: function() {
     return {
       route: RouterStore.get('route')
     };
   },
 
-  componentWillMount: function () {
-    RouterStore.on('changed:route', this.handleRouteChange);
-  },
-
-  componentWillUnmount: function () {
-    RouterStore.removeListener('changed:route', this.handleRouteChange);
-  },
-
-  handleRouteChange: function() {
-    this.setState({
-      route: RouterStore.get('route')
-    });
-  },
-
   render: function() {
-    var path = this.state.route && this.state.route.path;
+    debug('render');
+    var path = $.get(this.state.route, 'path');
 
     return (
       <div>
@@ -97,9 +120,23 @@ var App = React.createClass({
       <p>
         <NavLink active={path === '/dashboard'} path='/dashboard'>Dashboard</NavLink>{' · '}
         <NavLink active={path === '/account'} path='/account'>Account</NavLink>{' · '}
-        <Logout />
+        {this.renderLogout()}
       </p>
     );
+  },
+
+  renderLogout: function() {
+    if (this.state.loggingOut) {
+      return <span>Logging out...</span>;
+    }
+
+    return <a href="#" onClick={this.handleLogout}>Logout</a>;
+  },
+
+  handleLogout: function(e) {
+    debug('handleLogout');
+    e.preventDefault();
+    UserActions.logout(UserStore.get('token'));
   }
 });
 

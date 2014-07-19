@@ -33,3 +33,9 @@ $ npm start
 ```
 
 Point your browser to `http://localhost:8080`.
+
+## Development
+
+### Debugging
+
+Enable the app's debug output by typing `$debug.enable('*')` in the browser's console and refreshing the page.

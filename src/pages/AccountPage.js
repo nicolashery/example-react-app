@@ -1,31 +1,42 @@
 var React = require('react');
+var $ = require('fluxy').$;
+var assign = require('lodash-node/modern/objects/assign');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
 
+var debug = require('debug')('app:AccountPage');
+
 var AccountPage = React.createClass({
   getInitialState: function() {
-    return {
-      user:  UserStore.loggedInUser(),
+    return assign({
       working: false
-    };
+    }, this.getUserStoreState());
   },
 
   componentWillMount: function () {
-    UserStore.on('changed:user', this.handleStoreChange);
+    debug('mount');
+    UserStore.addWatch(this.handleUserStoreChange);
   },
 
   componentWillUnmount: function () {
-    UserStore.removeListener('changed:user', this.handleStoreChange);
+    debug('unmount');
+    UserStore.removeWatch(this.handleUserStoreChange);
   },
 
-  handleStoreChange: function() {
-    this.setState({
+  handleUserStoreChange: function() {
+    debug('handleUserStoreChange');
+    this.setState(this.getUserStoreState());
+  },
+
+  getUserStoreState: function() {
+    return {
       user: UserStore.loggedInUser()
-    });
+    };
   },
 
   render: function() {
-    var user = this.state.user || {};
+    debug('render');
+    var user = $.clj_to_js(this.state.user) || {};
 
     return (
       <div>
@@ -55,11 +66,11 @@ var AccountPage = React.createClass({
   },
 
   handleSave: function(e) {
+    debug('handleSave');
     e.preventDefault();
     var username = this.refs.username.getDOMNode().value;
     var password = this.refs.password.getDOMNode().value;
     var fullName = this.refs.fullName.getDOMNode().value;
-    console.log('save');
   }
 });
 

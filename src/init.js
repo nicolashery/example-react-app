@@ -1,6 +1,8 @@
 var UserService = require('./user/UserService');
 var UserStore = require('./user/UserStore');
 
+var debug = require('debug')('app:init');
+
 var init = function() {
   return UserService.init().then(function(result) {
     result = result || {};
@@ -8,6 +10,7 @@ var init = function() {
     // but making an exception here for the init method?
     UserStore.set('token', result.token);
     UserStore.set('user', result.user);
+    debug('complete');
     return true;
   });
 };

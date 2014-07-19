@@ -1,31 +1,53 @@
 var React = require('react');
+var assign = require('lodash-node/modern/objects/assign');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
 var RouterStore = require('../router/RouterStore');
 
+var debug = require('debug')('app:LoginPage');
+
 var LoginPage = React.createClass({
   getInitialState: function() {
+    return assign(this.getUserStoreState(), this.getRouterStoreState());
+  },
+
+  componentWillMount: function () {
+    debug('mount');
+    UserStore.addWatch(this.handleUserStoreChange);
+    RouterStore.addWatch(this.handleRouterStoreChange);
+  },
+
+  componentWillUnmount: function () {
+    debug('unmount');
+    UserStore.removeWatch(this.handleUserStoreChange);
+    RouterStore.removeWatch(this.handleRouterStoreChange);
+  },
+
+  handleUserStoreChange: function() {
+    debug('handleUserStoreChange');
+    this.setState(this.getUserStoreState());
+  },
+
+  getUserStoreState: function() {
     return {
-      loggingIn:  UserStore.get('loggingIn'),
-      errorMessage: UserStore.errorMessage(),
+      loggingIn: UserStore.get('loggingIn'),
+      errorMessage: UserStore.errorMessage()
+    };
+  },
+
+  handleRouterStoreChange: function() {
+    debug('handleRouterStoreChange');
+    this.setState(this.getRouterStoreState());
+  },
+
+  getRouterStoreState: function() {
+    return {
       redirectUri: RouterStore.redirectAfterLoginUri()
     };
   },
 
-  componentWillMount: function () {
-    UserStore.on('changed:loggingIn', this.handleUserStoreChange);
-    UserStore.on('changed:error', this.handleUserStoreChange);
-    RouterStore.on('changed:redirectAfterLogin', this.handleRouterStoreChange);
-  },
-
-  componentWillUnmount: function () {
-    UserStore.removeListener('changed:loggingIn', this.handleUserStoreChange);
-    UserStore.removeListener('changed:error', this.handleUserStoreChange);
-    RouterStore.removeListener('changed:redirectAfterLogin',
-      this.handleRouterStoreChange);
-  },
-
   render: function() {
+    debug('render');
     return (
       <div>
         <h1>Login</h1>
@@ -70,23 +92,11 @@ var LoginPage = React.createClass({
   },
 
   handleLogin: function(e) {
+    debug('handleLogin');
     e.preventDefault();
     var username = this.refs.username.getDOMNode().value;
     var password = this.refs.password.getDOMNode().value;
     UserActions.login(username, password);
-  },
-
-  handleUserStoreChange: function() {
-    this.setState({
-      loggingIn: UserStore.get('loggingIn'),
-      errorMessage: UserStore.errorMessage()
-    });
-  },
-
-  handleRouterStoreChange: function() {
-    this.setState({
-      redirectUri: RouterStore.redirectAfterLoginUri()
-    });
   }
 });
 
