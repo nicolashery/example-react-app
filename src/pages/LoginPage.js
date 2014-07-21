@@ -35,7 +35,13 @@ var LoginPage = React.createClass({
     };
   },
 
-  handleRouterStoreChange: function() {
+  handleRouterStoreChange: function(keys, oldState, newState) {
+    // Don't trigger a re-render on route change
+    // or it will error trying to update an unmounted component
+    if (keys !== 'redirectUri') {
+      return;
+    }
+
     debug('handleRouterStoreChange');
     this.setState(this.getRouterStoreState());
   },
