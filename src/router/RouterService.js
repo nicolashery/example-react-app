@@ -1,5 +1,5 @@
-var helpers = require('./lib/helpers');
-var router = require('./router');
+var helpers = require('router-lib').helpers;
+var router = require('router-lib').router;
 
 var RouterService = {
   setup: function(options) {
