@@ -3,6 +3,7 @@ var $ = Fluxy.$;
 var RouterConstants = require('./RouterConstants');
 var RouterService = require('./RouterService');
 var RouterActions = require('./RouterActions');
+var UserConstants = require('../user/UserConstants');
 var UserStore = require('../user/UserStore');
 
 var debug = require('debug')('app:RouterStore');
@@ -23,46 +24,47 @@ module.exports = Fluxy.createStore({
     return RouterService.uriFromRoute(route);
   },
 
+  _navigateTo: function(route) {
+    var path = route && route.path;
+    debug('_navigateTo', route);
+
+    var routeFound = route && RouterService.isRouteMatched(route);
+    var isDefaultRoute = (path === '/');
+    var routeRequiresAuth = route && RouterService.requiresAuth(route);
+    var userIsAuthenticated = UserStore.isAuthenticated();
+
+    if (!routeFound) {
+      debug('route not found, redirecting');
+      route = RouterService.notFoundRoute();
+    }
+    else if (isDefaultRoute) {
+      debug('default route, redirecting');
+      route = userIsAuthenticated ?
+        RouterService.defaultAuthRoute() : RouterService.defaultNoAuthRoute();
+    }
+    else if (routeRequiresAuth && !userIsAuthenticated) {
+      debug('not logged in, redirecting');
+      this.set('redirectAfterLogin', $.js_to_clj(route));
+      route = RouterService.defaultNoAuthRoute();
+    }
+    else if (!routeRequiresAuth && userIsAuthenticated) {
+      debug('already logged in, redirecting');
+      route = RouterService.defaultAuthRoute();
+    }
+
+    RouterService.updateBrowserUri(route);
+
+    this.set('route', $.js_to_clj(route));
+  },
+
   actions: [
     [RouterConstants.ROUTE_CHANGE,
-    // NOTE: this waitFor throws an error when starting Flux
-    // things work without it though, so might not be necessary
-    // {waitFor: [UserStore]},
     function(payload) {
-      var route = payload.route;
-      var path = route && route.path;
-      debug('route change', route);
-
-      var routeFound = route && RouterService.isRouteMatched(route);
-      var isDefaultRoute = (path === '/');
-      var routeRequiresAuth = route && RouterService.requiresAuth(route);
-      var userIsAuthenticated = UserStore.isAuthenticated();
-
-      if (!routeFound) {
-        debug('route not found, redirecting');
-        route = RouterService.notFoundRoute();
-      }
-      else if (isDefaultRoute) {
-        debug('default route, redirecting');
-        route = userIsAuthenticated ?
-          RouterService.defaultAuthRoute() : RouterService.defaultNoAuthRoute();
-      }
-      else if (routeRequiresAuth && !userIsAuthenticated) {
-        debug('not logged in, redirecting');
-        this.set('redirectAfterLogin', $.js_to_clj(route));
-        route = RouterService.defaultNoAuthRoute();
-      }
-      else if (!routeRequiresAuth && userIsAuthenticated) {
-        debug('already logged in, redirecting');
-        route = RouterService.defaultAuthRoute();
-      }
-
-      RouterService.updateBrowserUri(route);
-
-      this.set('route', $.js_to_clj(route));
+      this._navigateTo(payload.route);
     }],
 
-    [RouterConstants.REDIRECT_AFTER_LOGIN,
+    [UserConstants.LOGIN_SUCCESS,
+    {waitFor: [UserStore]},
     function() {
       var redirectAfterLogin = this.getAsJS('redirectAfterLogin');
       if (redirectAfterLogin) {
@@ -71,12 +73,13 @@ module.exports = Fluxy.createStore({
         return RouterActions.navigateTo(redirectAfterLogin);
       }
 
-      RouterActions.navigateTo(RouterService.defaultAuthRoute());
+      this._navigateTo(RouterService.defaultAuthRoute());
     }],
 
-    [RouterConstants.REDIRECT_AFTER_LOGOUT,
+    [UserConstants.LOGOUT_SUCCESS,
+    {waitFor: [UserStore]},
     function() {
-      RouterActions.navigateTo(RouterService.defaultNoAuthRoute());
+      this._navigateTo(RouterService.defaultNoAuthRoute());
     }]
   ]
 });
