@@ -16,9 +16,8 @@
   "dependencies": {
     "bluebird": "^2.2.1",
     "debug": "^1.0.4",
-    "envify": "^1.2.1",
     "fluxy": "^0.3.0",
-    "react": "^0.10.0",
+    "react": "^0.11.0",
     "router-lib": "^0.0.1"
   },
   "devDependencies": {

@@ -63,7 +63,6 @@ module.exports = Fluxy.createStore({
     }],
 
     [RouterConstants.REDIRECT_AFTER_LOGIN,
-    // {waitFor: [UserStore]},
     function() {
       var redirectAfterLogin = this.getAsJS('redirectAfterLogin');
       if (redirectAfterLogin) {
@@ -76,7 +75,6 @@ module.exports = Fluxy.createStore({
     }],
 
     [RouterConstants.REDIRECT_AFTER_LOGOUT,
-    // {waitFor: [UserStore]},
     function() {
       RouterActions.navigateTo(RouterService.defaultNoAuthRoute());
     }]
