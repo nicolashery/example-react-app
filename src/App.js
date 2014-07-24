@@ -79,9 +79,51 @@ var App = React.createClass({
     return (
       <div>
         {this.renderHeader(path)}
+        <h1>{this.renderTitle(path)}</h1>
         {this.renderContent(path)}
       </div>
     );
+  },
+
+  renderHeader: function(path) {
+    if (path === '/login' || path === '/about') {
+      return (
+        <p>
+          <NavLink active={path === '/login'} path='/login'>Login</NavLink>{' · '}
+          <NavLink active={path === '/about'} path='/about'>About</NavLink>
+        </p>
+      );
+    }
+
+    return (
+      <p>
+        <NavLink active={path === '/dashboard'} path='/dashboard'>Dashboard</NavLink>{' · '}
+        <NavLink active={path === '/account'} path='/account'>Account</NavLink>{' · '}
+        {this.renderLogout()}
+      </p>
+    );
+  },
+
+  renderTitle: function(path) {
+    if (path === '/404') {
+      return 'Not found';
+    }
+
+    if (path === '/login') {
+      return 'Login';
+    }
+    if (path === '/about') {
+      return 'About';
+    }
+
+    if (path === '/dashboard') {
+      return 'Dashboard';
+    }
+    if (path === '/account') {
+      return 'Account';
+    }
+
+    return null;
   },
 
   renderContent: function(path) {
@@ -104,25 +146,6 @@ var App = React.createClass({
     }
 
     return null;
-  },
-
-  renderHeader: function(path) {
-    if (path === '/login' || path === '/about') {
-      return (
-        <p>
-          <NavLink active={path === '/login'} path='/login'>Login</NavLink>{' · '}
-          <NavLink active={path === '/about'} path='/about'>About</NavLink>
-        </p>
-      );
-    }
-
-    return (
-      <p>
-        <NavLink active={path === '/dashboard'} path='/dashboard'>Dashboard</NavLink>{' · '}
-        <NavLink active={path === '/account'} path='/account'>Account</NavLink>{' · '}
-        {this.renderLogout()}
-      </p>
-    );
   },
 
   renderLogout: function() {

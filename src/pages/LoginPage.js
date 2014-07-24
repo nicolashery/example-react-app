@@ -56,7 +56,6 @@ var LoginPage = React.createClass({
     debug('render');
     return (
       <div>
-        <h1>Login</h1>
         {this.renderRedirectMessage()}
         <p>Hint: demo/demo</p>
         <form>

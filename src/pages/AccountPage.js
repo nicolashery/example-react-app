@@ -40,7 +40,6 @@ var AccountPage = React.createClass({
 
     return (
       <div>
-        <h1>Account</h1>
         <form>
           <p><input ref="username" placeholder="username" defaultValue={user.username}/></p>
           <p><input ref="password" placeholder="password"/></p>
