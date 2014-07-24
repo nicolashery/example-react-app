@@ -4,9 +4,9 @@ var assign = require('lodash-node/modern/objects/assign');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
 
-var debug = require('debug')('app:AccountPage');
+var debug = require('debug')('app:AccountForm');
 
-var AccountPage = React.createClass({
+var AccountForm = React.createClass({
   getInitialState: function() {
     return assign({
       working: false
@@ -39,14 +39,12 @@ var AccountPage = React.createClass({
     var user = $.clj_to_js(this.state.user) || {};
 
     return (
-      <div>
-        <form>
-          <p><input ref="username" placeholder="username" defaultValue={user.username}/></p>
-          <p><input ref="password" placeholder="password"/></p>
-          <p><input ref="fullName" placeholder="fullName" defaultValue={user.fullName}/></p>
-          <p>{this.renderButton()}</p>
-        </form>
-      </div>
+      <form>
+        <p><input ref="username" placeholder="username" defaultValue={user.username}/></p>
+        <p><input ref="password" placeholder="password"/></p>
+        <p><input ref="fullName" placeholder="fullName" defaultValue={user.fullName}/></p>
+        <p>{this.renderButton()}</p>
+      </form>
     );
   },
 
@@ -73,4 +71,4 @@ var AccountPage = React.createClass({
   }
 });
 
-module.exports = AccountPage;
+module.exports = AccountForm;

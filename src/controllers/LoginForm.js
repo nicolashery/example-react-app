@@ -1,26 +1,22 @@
 var React = require('react');
-var assign = require('lodash-node/modern/objects/assign');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
-var RouterStore = require('../router/RouterStore');
 
-var debug = require('debug')('app:LoginPage');
+var debug = require('debug')('app:LoginForm');
 
-var LoginPage = React.createClass({
+var LoginForm = React.createClass({
   getInitialState: function() {
-    return assign(this.getUserStoreState(), this.getRouterStoreState());
+    return this.getUserStoreState();
   },
 
   componentDidMount: function () {
     debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
-    RouterStore.addWatch(this.handleRouterStoreChange);
   },
 
   componentWillUnmount: function () {
     debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
-    RouterStore.removeWatch(this.handleRouterStoreChange);
   },
 
   handleUserStoreChange: function() {
@@ -35,28 +31,10 @@ var LoginPage = React.createClass({
     };
   },
 
-  handleRouterStoreChange: function(keys, oldState, newState) {
-    // Don't trigger a re-render on route change
-    // or it will error trying to update an unmounted component
-    if (keys !== 'redirectUri') {
-      return;
-    }
-
-    debug('handleRouterStoreChange');
-    this.setState(this.getRouterStoreState());
-  },
-
-  getRouterStoreState: function() {
-    return {
-      redirectUri: RouterStore.redirectAfterLoginUri()
-    };
-  },
-
   render: function() {
     debug('render');
     return (
       <div>
-        {this.renderRedirectMessage()}
         <p>Hint: demo/demo</p>
         <form>
           <p><input ref="username" placeholder="username"/></p>
@@ -82,20 +60,6 @@ var LoginPage = React.createClass({
     );
   },
 
-  renderRedirectMessage: function() {
-    var uri = this.state.redirectUri;
-    if (!uri) {
-      return null;
-    }
-
-    return (
-      <p>
-        {'After logging in you will be redirected to '}
-        <strong>{uri}</strong>
-      </p>
-    );
-  },
-
   handleLogin: function(e) {
     debug('handleLogin');
     e.preventDefault();
@@ -105,4 +69,4 @@ var LoginPage = React.createClass({
   }
 });
 
-module.exports = LoginPage;
+module.exports = LoginForm;

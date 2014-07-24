@@ -1,11 +1,9 @@
 var React = require('react');
-var $ = require('fluxy').$;
-var RouterStore = require('./router/RouterStore');
-var routingTable = require('./routes/table');
+var RouterStore = require('../router/RouterStore');
 
-var debug = require('debug')('app:App');
+var debug = require('debug')('app:LoginRedirect');
 
-var App = React.createClass({
+var LoginRedirect = React.createClass({
   getInitialState: function() {
     return this.getRouterStoreState();
   },
@@ -21,26 +19,36 @@ var App = React.createClass({
   },
 
   handleRouterStoreChange: function(keys, oldState, newState) {
-    if (keys !== 'route') {
+    // Don't trigger a re-render on route change
+    // or it will error trying to update an unmounted component
+    if (keys !== 'redirectUri') {
       return;
     }
+
     debug('handleRouterStoreChange');
     this.setState(this.getRouterStoreState());
   },
 
   getRouterStoreState: function() {
     return {
-      route: RouterStore.get('route')
+      redirectUri: RouterStore.redirectAfterLoginUri()
     };
   },
 
   render: function() {
     debug('render');
-    var path = $.get(this.state.route, 'path');
-    var ActiveRoute = routingTable[path] || null;
+    var uri = this.state.redirectUri;
+    if (!uri) {
+      return null;
+    }
 
-    return <ActiveRoute />;
+    return (
+      <p>
+        {'After logging in you will be redirected to '}
+        <strong>{uri}</strong>
+      </p>
+    );
   }
 });
 
-module.exports = App;
+module.exports = LoginRedirect;
