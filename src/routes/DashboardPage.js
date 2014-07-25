@@ -1,20 +1,18 @@
 var React = require('react');
 var Layout = require('../layouts/DefaultLayout');
-var NavBar = require('./NavBar');
+var nav = require('./nav');
 
 var DashboardPage = React.createClass({
-  path: '/dashboard',
-
   render: function() {
     return <Layout
-      header={this.renderNavBar()}
+      header={this.renderNav()}
       title='Dashboard'
       content={this.renderContent()}
     />;
   },
 
-  renderNavBar: function() {
-    return <NavBar activePath={this.path} />;
+  renderNav: function() {
+    return nav(this.props.path);
   },
 
   renderContent: function() {

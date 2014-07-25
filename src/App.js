@@ -37,9 +37,13 @@ var App = React.createClass({
   render: function() {
     debug('render');
     var path = $.get(this.state.route, 'path');
-    var ActiveRoute = routingTable[path] || null;
+    var ActiveRoute = routingTable[path];
 
-    return <ActiveRoute />;
+    if (!ActiveRoute) {
+      return null;
+    }
+
+    return <ActiveRoute path={path} />;
   }
 });
 

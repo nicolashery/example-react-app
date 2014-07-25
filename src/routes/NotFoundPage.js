@@ -1,20 +1,18 @@
 var React = require('react');
 var Layout = require('../layouts/DefaultLayout');
-var NavBar = require('./NavBar');
+var nav = require('./nav');
 
 var NotFoundPage = React.createClass({
-  path: '/404',
-
   render: function() {
     return <Layout
-      header={this.renderNavBar()}
+      header={this.renderNav()}
       title='Not found'
       content={this.renderContent()}
     />;
   },
 
-  renderNavBar: function() {
-    return <NavBar activePath={this.path} />;
+  renderNav: function() {
+    return nav(this.props.path);
   },
 
   renderContent: function() {

@@ -1,21 +1,19 @@
 var React = require('react');
 var Layout = require('../layouts/DefaultLayout');
-var NavBar = require('./NavBar');
+var nav = require('./nav');
 var AccountForm = require('../controllers/AccountForm');
 
 var LoginPage = React.createClass({
-  path: '/account',
-
   render: function() {
     return <Layout
-      header={this.renderNavBar()}
+      header={this.renderNav()}
       title='Account'
       content={this.renderContent()}
     />;
   },
 
-  renderNavBar: function() {
-    return <NavBar activePath={this.path} />;
+  renderNav: function() {
+    return nav(this.props.path);
   },
 
   renderContent: function() {

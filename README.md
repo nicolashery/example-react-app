@@ -34,6 +34,24 @@ $ npm start
 
 Point your browser to `http://localhost:8080`.
 
+## Organization
+
+`components/`: Re-usable React components, the building blocks of the application (ex: buttons, inputs, list items, etc.). They have no state (except on rare occasions), and props are plain JavaScript types and objects.
+
+`controllers/`: Any React component that needs to interact with Flux actions or stores go here. Their state is usually synced with one or more stores, and contains Mori data structures (which they can use to optimize when they should re-render).
+
+`layouts/`: React components whose sole purpose is to organize the position of application elements on the page, using "regions" (ex: header, content, footer, modal, etc.). Each region is usually a prop that expects a React "renderable".
+
+`routes/`: Contains React components called "pages", that are matched to a route in `table.js`. Pages use layouts and controllers to render a full page. Anything else that concerns routing is found here, like `setup.js` for the router, and `nav.js` for the main navbar.
+
+`<domain>/`: Flux actions and stores, as well as corresponding "services" (ex: talking to an HTTP API, interacting with the browser's URL hash, etc.), are grouped in "domain" folders (ex: `user/`, `router`/, etc.).
+
+`App.js`: Top-level React component. Responds to a route change by rendering the appropriate page according to the routing table.
+
+`init.js`: Anything that needs to happen before the app is actually started goes in this async function (ex: checking the validity of an auth token stored locally).
+
+`index.js`: Main entry point. Sets up and starts and services, calls the `init` function, and when it's done renders the `App` component to the DOM.
+
 ## Development
 
 ### Debugging
