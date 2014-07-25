@@ -35,13 +35,17 @@ var LoginForm = React.createClass({
     debug('render');
     return (
       <div>
-        <p>Hint: demo/demo</p>
+        <p className="text-muted">Hint: demo/demo</p>
         <form>
-          <p><input ref="username" placeholder="username"/></p>
-          <p><input ref="password" placeholder="password"/></p>
-          <p>{this.renderButton()}</p>
+          <div className="form-group">
+            <input className="form-control" ref="username" placeholder="username"/>
+          </div>
+          <div className="form-group">
+            <input className="form-control" ref="password" placeholder="password"/>
+          </div>
+          {this.renderButton()}
         </form>
-        <p>{this.state.errorMessage}</p>
+        {this.renderError()}
       </div>
     );
   },
@@ -56,7 +60,12 @@ var LoginForm = React.createClass({
     }
 
     return (
-      <button onClick={this.handleLogin} disabled={disabled}>{text}</button>
+      <button
+        className="btn btn-primary"
+        onClick={this.handleLogin}
+        disabled={disabled}>
+        {text}
+      </button>
     );
   },
 
@@ -66,6 +75,14 @@ var LoginForm = React.createClass({
     var username = this.refs.username.getDOMNode().value;
     var password = this.refs.password.getDOMNode().value;
     UserActions.login(username, password);
+  },
+
+  renderError: function() {
+    var errorMessage = this.state.errorMessage;
+    if (!(errorMessage && errorMessage.length)) {
+      return;
+    }
+    return <div className="alert alert-warning">{errorMessage}</div>;
   }
 });
 

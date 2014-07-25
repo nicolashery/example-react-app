@@ -43,10 +43,10 @@ var LoginRedirect = React.createClass({
     }
 
     return (
-      <p>
+      <div className="alert alert-info">
         {'After logging in you will be redirected to '}
         <strong>{uri}</strong>
-      </p>
+      </div>
     );
   }
 });

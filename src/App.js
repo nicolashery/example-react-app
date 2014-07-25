@@ -3,6 +3,8 @@ var $ = require('fluxy').$;
 var RouterStore = require('./router/RouterStore');
 var routingTable = require('./routes/table');
 
+require('./App.less');
+
 var debug = require('debug')('app:App');
 
 var App = React.createClass({

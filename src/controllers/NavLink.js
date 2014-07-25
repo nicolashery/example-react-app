@@ -8,11 +8,17 @@ var NavLink = React.createClass({
 
   render: function() {
     if (this.props.active) {
-      return <span>{this.props.children}</span>;
+      return (
+        <li className="active">
+          <a>{this.props.children}</a>
+        </li>
+      );
     }
 
-    return this.transferPropsTo(
-      <Link>{this.props.children}</Link>
+    return (
+      <li>
+        {this.transferPropsTo(<Link>{this.props.children}</Link>)}
+      </li>
     );
   }
 });

@@ -40,10 +40,16 @@ var AccountForm = React.createClass({
 
     return (
       <form>
-        <p><input ref="username" placeholder="username" defaultValue={user.username}/></p>
-        <p><input ref="password" placeholder="password"/></p>
-        <p><input ref="fullName" placeholder="fullName" defaultValue={user.fullName}/></p>
-        <p>{this.renderButton()}</p>
+        <div className="form-group">
+          <input className="form-control" ref="username" placeholder="username" defaultValue={user.username}/>
+        </div>
+        <div className="form-group">
+          <input className="form-control" ref="password" placeholder="password"/>
+        </div>
+        <div className="form-group">
+          <input className="form-control" ref="fullName" placeholder="fullName" defaultValue={user.fullName}/>
+        </div>
+        {this.renderButton()}
       </form>
     );
   },
@@ -58,7 +64,12 @@ var AccountForm = React.createClass({
     }
 
     return (
-      <button onClick={this.handleSave} disabled={disabled}>{text}</button>
+      <button
+        className="btn btn-primary"
+        onClick={this.handleSave}
+        disabled={disabled}>
+        {text}
+      </button>
     );
   },
 

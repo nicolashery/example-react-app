@@ -4,6 +4,7 @@ var $ = require('fluxy').$;
 var UserStore = require('../user/UserStore');
 var UserActions = require('../user/UserActions');
 var NavLink = require('./NavLink');
+var Link = require('./Link');
 
 var debug = require('debug')('app:NavBar');
 
@@ -41,8 +42,6 @@ var NavBar = React.createClass({
     };
   },
 
-  linkSeparator: ' · ',
-
   render: function() {
     debug('render');
     if (!this.props.activePath) {
@@ -59,51 +58,58 @@ var NavBar = React.createClass({
   renderWhenNotAuthenticated: function() {
     var links = this.renderLinks(this.props.noAuthLinks);
     return (
-      <p>
-        {links}
-      </p>
+      <div>
+        {this.renderBrand()}
+        <ul className="nav navbar-nav">
+          {links}
+        </ul>
+      </div>
     );
   },
 
   renderWhenAuthenticated: function() {
     var links = this.renderLinks(this.props.authLinks);
-    var sep = links.length ? this.linkSeparator : null;
     return (
-      <p>
-        {links}
-        {sep}
-        {this.renderLoggedInAs()}
-      </p>
+      <div>
+        {this.renderBrand()}
+        <ul className="nav navbar-nav">
+          {links}
+        </ul>
+        <ul className="nav navbar-nav navbar-right">
+          {this.renderLoggedInAs()}
+          {this.renderLogout()}
+        </ul>
+      </div>
     );
+  },
+
+  renderBrand: function() {
+    return <Link className="navbar-brand" path="/">React App</Link>;
   },
 
   renderLinks: function(links) {
     var self = this;
-    var lastIndex = links && links.length - 1;
-    return fn.map(function(link, index) {
+    return fn.map(function(link) {
       var path = link.path;
-      var sep = index === lastIndex ? null : self.linkSeparator;
       return (
-        <span key={path}>
-          <NavLink
-            active={self.props.activePath === path}
-            path={path}>
-            {link.label}
-          </NavLink>
-          {sep}
-        </span>
+        <NavLink
+          key={path}
+          active={self.props.activePath === path}
+          path={path}>
+          {link.label}
+        </NavLink>
       );
     }, links);
   },
 
   renderLoggedInAs: function() {
     return (
-      <span>
-        {'Logged in as '}
-        {this.renderUserDisplayName()}
-        {' '}
-        {this.renderLogout()}
-      </span>
+      <li>
+        <p className="navbar-text">
+          {'Logged in as '}
+          {this.renderUserDisplayName()}
+        </p>
+      </li>
     );
   },
 
@@ -114,10 +120,18 @@ var NavBar = React.createClass({
 
   renderLogout: function() {
     if (this.state.loggingOut) {
-      return <span>Logging out...</span>;
+      return (
+        <li>
+          <p className="navbar-text">Logging out...</p>
+        </li>
+      );
     }
 
-    return <a href="#" onClick={this.handleLogout}>Logout</a>;
+    return (
+      <li>
+        <a href="#" onClick={this.handleLogout}>Logout</a>
+      </li>
+    );
   },
 
   handleLogout: function(e) {
