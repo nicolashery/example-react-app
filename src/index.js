@@ -1,6 +1,6 @@
 var React = require('react');
 var Fluxy = require('fluxy');
-var assign = require('lodash-node/modern/objects/assign');
+var fn = require('fn.js');
 var App = require('./App');
 var init = require('./init');
 var RouterService = require('./router/RouterService');
@@ -12,7 +12,7 @@ var debug = require('debug')('app');
 window.React = React;
 
 // Glue-code to setup routing
-RouterService.setup(assign(require('./routes/setup'), {
+RouterService.setup(fn.merge(require('./routes/setup'), {
   onChange: function(uri, route) {
     debug('uri change', uri);
     RouterActions.navigateTo(route);

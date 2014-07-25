@@ -1,6 +1,6 @@
 var React = require('react');
 var $ = require('fluxy').$;
-var assign = require('lodash-node/modern/objects/assign');
+var fn = require('fn.js');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
 
@@ -8,7 +8,7 @@ var debug = require('debug')('app:AccountForm');
 
 var AccountForm = React.createClass({
   getInitialState: function() {
-    return assign({
+    return fn.merge({
       working: false
     }, this.getUserStoreState());
   },
