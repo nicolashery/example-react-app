@@ -9,6 +9,10 @@ var LoginForm = React.createClass({
     return this.getUserStoreState();
   },
 
+  componentWillMount: function() {
+    UserActions.clearRequests();
+  },
+
   componentDidMount: function () {
     debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
@@ -17,6 +21,7 @@ var LoginForm = React.createClass({
   componentWillUnmount: function () {
     debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
+    UserActions.clearRequests();
   },
 
   handleUserStoreChange: function() {
@@ -26,8 +31,8 @@ var LoginForm = React.createClass({
 
   getUserStoreState: function() {
     return {
-      loggingIn: UserStore.get('loggingIn'),
-      errorMessage: UserStore.errorMessage()
+      working: UserStore.isLoggingIn(),
+      errorMessage: UserStore.loginErrorMessage()
     };
   },
 
@@ -54,7 +59,7 @@ var LoginForm = React.createClass({
     var disabled;
     var text = 'Login';
 
-    if (this.state.loggingIn) {
+    if (this.state.working) {
       disabled = true;
       text = 'Logging in...';
     }

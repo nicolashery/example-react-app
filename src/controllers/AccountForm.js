@@ -11,6 +11,10 @@ var AccountForm = React.createClass({
     return this.getUserStoreState();
   },
 
+  componentWillMount: function() {
+    UserActions.clearRequests();
+  },
+
   componentDidMount: function () {
     debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
@@ -19,6 +23,7 @@ var AccountForm = React.createClass({
   componentWillUnmount: function () {
     debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
+    UserActions.clearRequests();
   },
 
   handleUserStoreChange: function() {
@@ -29,8 +34,9 @@ var AccountForm = React.createClass({
   getUserStoreState: function() {
     return {
       user: UserStore.loggedInUser(),
-      working: UserStore.get('updating'),
-      errorMessage: UserStore.errorMessage()
+      working: UserStore.isUpdating(),
+      errorMessage: UserStore.updateErrorMessage(),
+      success: UserStore.isUpdateSuccessfull()
     };
   },
 
@@ -55,6 +61,7 @@ var AccountForm = React.createClass({
           {this.renderResetButton()}
         </form>
         {this.renderError()}
+        {this.renderSuccess()}
       </div>
     );
   },
@@ -121,6 +128,13 @@ var AccountForm = React.createClass({
       return;
     }
     return <div className="alert alert-warning">{errorMessage}</div>;
+  },
+
+  renderSuccess: function() {
+    if (!this.state.success) {
+      return;
+    }
+    return <div className="alert alert-success">All changes saved</div>;
   }
 });
 

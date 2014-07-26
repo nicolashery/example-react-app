@@ -34,7 +34,7 @@ module.exports = Fluxy.createActions({
 
   update: function(token, attributes) {
     var self = this;
-    self.dispatchAction(UserConstants.USER_UPDATE);
+    self.dispatchAction(UserConstants.USER_UPDATE, attributes);
 
     UserService.update(token, attributes)
       .then(function (result) {
@@ -45,5 +45,9 @@ module.exports = Fluxy.createActions({
       .catch(function (err) {
         self.dispatchAction(UserConstants.USER_UPDATE_FAIL, {error: err});
       });
+  },
+
+  clearRequests: function() {
+    this.dispatchAction(UserConstants.USER_CLEAR_REQUESTS);
   }
 });

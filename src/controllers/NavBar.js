@@ -19,6 +19,10 @@ var NavBar = React.createClass({
     return this.getUserStoreState();
   },
 
+  componentWillMount: function() {
+    UserActions.clearRequests();
+  },
+
   componentDidMount: function () {
     debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
@@ -27,6 +31,7 @@ var NavBar = React.createClass({
   componentWillUnmount: function () {
     debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
+    UserActions.clearRequests();
   },
 
   handleUserStoreChange: function() {
@@ -38,7 +43,7 @@ var NavBar = React.createClass({
     return {
       isAuthenticated: UserStore.isAuthenticated(),
       user: UserStore.loggedInUser(),
-      loggingOut: UserStore.get('loggingOut')
+      loggingOut: UserStore.isLoggingOut()
     };
   },
 

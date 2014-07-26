@@ -7,10 +7,9 @@ module.exports = Fluxy.createStore({
     return {
       token: null,
       user: null,
-      loggingIn: false,
-      loggingOut: false,
-      updating: false,
-      error: null
+      loginRequest: null,
+      logoutRequest: null,
+      updateRequest: null
     };
   },
 
@@ -26,58 +25,112 @@ module.exports = Fluxy.createStore({
     return this.get('user');
   },
 
-  errorMessage: function() {
-    return this.get(['error', 'message']);
+  isLoggingIn: function() {
+    return this.get(['loginRequest', 'status']) === 'pending';
+  },
+
+  loginErrorMessage: function() {
+    return this.get(['loginRequest', 'error', 'message']);
+  },
+
+  isLoggingOut: function() {
+    return this.get(['logoutRequest', 'status']) === 'pending';
+  },
+
+  logoutErrorMessage: function() {
+    return this.get(['logoutRequest', 'error', 'message']);
+  },
+
+  isUpdating: function() {
+    return this.get(['updateRequest', 'status']) === 'pending';
+  },
+
+  isUpdateSuccessfull: function() {
+    return this.get(['updateRequest', 'status']) === 'success';
+  },
+
+  updateErrorMessage: function() {
+    return this.get(['updateRequest', 'error', 'message']);
   },
 
   actions: [
     [UserConstants.LOGIN, function(payload) {
       this.set('token', null);
       this.set('user', null);
-      this.set('loggingIn', true);
-      this.set('error', null);
+      this.set('loginRequest', $.js_to_clj({
+        status: 'pending',
+        payload: payload
+      }));
     }],
 
     [UserConstants.LOGIN_SUCCESS, function(payload) {
       this.set('token', payload.token);
       this.set('user', $.js_to_clj(payload.user));
-      this.set('loggingIn', false);
+      this.set('loginRequest', function(request) {
+        return $.assoc(request, 'status', 'success');
+      });
     }],
 
     [UserConstants.LOGIN_FAIL, function(payload) {
-      this.set('error', $.js_to_clj(payload.error));
-      this.set('loggingIn', false);
+      this.set('loginRequest', function(request) {
+        return $.assoc(request,
+          'status', 'success',
+          'error', $.js_to_clj(payload.error)
+        );
+      });
     }],
 
     [UserConstants.LOGOUT, function(payload) {
-      this.set('loggingOut', true);
-      this.set('error', null);
+      this.set('logoutRequest', $.js_to_clj({
+        status: 'pending',
+        payload: payload
+      }));
     }],
 
     [UserConstants.LOGOUT_SUCCESS, function(payload) {
       this.set('token', null);
       this.set('user', null);
-      this.set('loggingOut', false);
+      this.set('logoutRequest', function(request) {
+        return $.assoc(request, 'status', 'success');
+      });
     }],
 
     [UserConstants.LOGOUT_FAIL, function(payload) {
-      this.set('error', $.js_to_clj(payload.error));
-      this.set('loggingOut', false);
+      this.set('logoutRequest', function(request) {
+        return $.assoc(request,
+          'status', 'error',
+          'error', $.js_to_clj(payload.error)
+        );
+      });
     }],
 
     [UserConstants.USER_UPDATE, function(payload) {
-      this.set('updating', true);
-      this.set('error', null);
+      this.set('updateRequest', $.js_to_clj({
+        status: 'pending',
+        payload: payload
+      }));
     }],
 
     [UserConstants.USER_UPDATE_SUCCESS, function(payload) {
       this.set('user', $.js_to_clj(payload.user));
-      this.set('updating', false);
+      this.set('updateRequest', function(request) {
+        return $.assoc(request, 'status', 'success');
+      });
     }],
 
     [UserConstants.USER_UPDATE_FAIL, function(payload) {
-      this.set('error', $.js_to_clj(payload.error));
-      this.set('updating', false);
+      this.set('updateRequest', function(request) {
+        return $.assoc(request,
+          'status', 'error',
+          'error', $.js_to_clj(payload.error)
+        );
+      });
+    }],
+
+    [UserConstants.USER_CLEAR_REQUESTS, function() {
+      this.set('loginRequest', null);
+      this.set('logoutRequest', null);
+      this.set('updateRequest', null);
     }]
   ]
 });
