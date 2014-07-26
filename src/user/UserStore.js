@@ -9,12 +9,17 @@ module.exports = Fluxy.createStore({
       user: null,
       loggingIn: false,
       loggingOut: false,
+      updating: false,
       error: null
     };
   },
 
   isAuthenticated: function() {
     return Boolean(this.get('token'));
+  },
+
+  token: function() {
+    return this.get('token');
   },
 
   loggedInUser: function() {
@@ -58,6 +63,21 @@ module.exports = Fluxy.createStore({
     [UserConstants.LOGOUT_FAIL, function(payload) {
       this.set('error', $.js_to_clj(payload.error));
       this.set('loggingOut', false);
+    }],
+
+    [UserConstants.USER_UPDATE, function(payload) {
+      this.set('updating', true);
+      this.set('error', null);
+    }],
+
+    [UserConstants.USER_UPDATE_SUCCESS, function(payload) {
+      this.set('user', $.js_to_clj(payload.user));
+      this.set('updating', false);
+    }],
+
+    [UserConstants.USER_UPDATE_FAIL, function(payload) {
+      this.set('error', $.js_to_clj(payload.error));
+      this.set('updating', false);
     }]
   ]
 });

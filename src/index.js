@@ -30,6 +30,7 @@ init().then(function() {
 
   window.$debug = require('debug');
   window.mori = require('fluxy').$;
+  app.storage = require('./storage');
   app.RouterStore = require('./router/RouterStore');
   app.UserStore = require('./user/UserStore');
 });

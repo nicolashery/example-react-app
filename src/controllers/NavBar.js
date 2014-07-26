@@ -137,7 +137,7 @@ var NavBar = React.createClass({
   handleLogout: function(e) {
     debug('handleLogout');
     e.preventDefault();
-    UserActions.logout(UserStore.get('token'));
+    UserActions.logout(UserStore.token());
   }
 });
 

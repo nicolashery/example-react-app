@@ -1,16 +1,14 @@
 var React = require('react');
 var $ = require('fluxy').$;
-var fn = require('fn.js');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
+var helpers = require('../helpers');
 
 var debug = require('debug')('app:AccountForm');
 
 var AccountForm = React.createClass({
   getInitialState: function() {
-    return fn.merge({
-      working: false
-    }, this.getUserStoreState());
+    return this.getUserStoreState();
   },
 
   componentDidMount: function () {
@@ -30,7 +28,9 @@ var AccountForm = React.createClass({
 
   getUserStoreState: function() {
     return {
-      user: UserStore.loggedInUser()
+      user: UserStore.loggedInUser(),
+      working: UserStore.get('updating'),
+      errorMessage: UserStore.errorMessage()
     };
   },
 
@@ -39,22 +39,27 @@ var AccountForm = React.createClass({
     var user = $.clj_to_js(this.state.user) || {};
 
     return (
-      <form>
-        <div className="form-group">
-          <input className="form-control" ref="username" placeholder="username" defaultValue={user.username}/>
-        </div>
-        <div className="form-group">
-          <input className="form-control" ref="password" placeholder="password"/>
-        </div>
-        <div className="form-group">
-          <input className="form-control" ref="fullName" placeholder="fullName" defaultValue={user.fullName}/>
-        </div>
-        {this.renderButton()}
-      </form>
+      <div>
+        <form>
+          <div className="form-group">
+            <input className="form-control" ref="username" placeholder="username" defaultValue={user.username}/>
+          </div>
+          <div className="form-group">
+            <input className="form-control" ref="password" placeholder="password"/>
+          </div>
+          <div className="form-group">
+            <input className="form-control" ref="fullName" placeholder="fullName" defaultValue={user.fullName}/>
+          </div>
+          {this.renderSubmitButton()}
+          {' '}
+          {this.renderResetButton()}
+        </form>
+        {this.renderError()}
+      </div>
     );
   },
 
-  renderButton: function() {
+  renderSubmitButton: function() {
     var disabled;
     var text = 'Save';
 
@@ -65,6 +70,7 @@ var AccountForm = React.createClass({
 
     return (
       <button
+        type="submit"
         className="btn btn-primary"
         onClick={this.handleSave}
         disabled={disabled}>
@@ -76,9 +82,45 @@ var AccountForm = React.createClass({
   handleSave: function(e) {
     debug('handleSave');
     e.preventDefault();
-    var username = this.refs.username.getDOMNode().value;
-    var password = this.refs.password.getDOMNode().value;
-    var fullName = this.refs.fullName.getDOMNode().value;
+    var formValues = this.getFormValues();
+    UserActions.update(UserStore.token(), formValues);
+  },
+
+  getFormValues: function() {
+    return {
+      username: helpers.trim(this.refs.username.getDOMNode().value),
+      password: helpers.trim(this.refs.password.getDOMNode().value),
+      fullName: helpers.trim(this.refs.fullName.getDOMNode().value)
+    };
+  },
+
+  renderResetButton: function() {
+    return (
+      <button
+        type="button"
+        className="btn btn-default"
+        onClick={this.handleReset}
+        disabled={this.state.working}>
+        {'Reset'}
+      </button>
+    );
+  },
+
+  handleReset: function(e) {
+    debug('handleReset');
+    e.preventDefault();
+    var user = $.clj_to_js(this.state.user) || {};
+    this.refs.username.getDOMNode().value = user.username;
+    this.refs.password.getDOMNode().value = '';
+    this.refs.fullName.getDOMNode().value = user.fullName;
+  },
+
+  renderError: function() {
+    var errorMessage = this.state.errorMessage;
+    if (!(errorMessage && errorMessage.length)) {
+      return;
+    }
+    return <div className="alert alert-warning">{errorMessage}</div>;
   }
 });
 

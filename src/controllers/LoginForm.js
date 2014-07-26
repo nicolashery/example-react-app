@@ -61,6 +61,7 @@ var LoginForm = React.createClass({
 
     return (
       <button
+        type="submit"
         className="btn btn-primary"
         onClick={this.handleLogin}
         disabled={disabled}>

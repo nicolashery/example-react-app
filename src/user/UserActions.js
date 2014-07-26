@@ -30,5 +30,20 @@ module.exports = Fluxy.createActions({
       .catch(function (err) {
         self.dispatchAction(UserConstants.LOGOUT_FAIL, {error: err});
       });
+  },
+
+  update: function(token, attributes) {
+    var self = this;
+    self.dispatchAction(UserConstants.USER_UPDATE);
+
+    UserService.update(token, attributes)
+      .then(function (result) {
+        self.dispatchAction(UserConstants.USER_UPDATE_SUCCESS, {
+          user: result.user
+        });
+      })
+      .catch(function (err) {
+        self.dispatchAction(UserConstants.USER_UPDATE_FAIL, {error: err});
+      });
   }
 });

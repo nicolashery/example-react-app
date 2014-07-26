@@ -1,12 +1,7 @@
 var Promise = require('bluebird');
+var storage = require('../storage');
 
 var DEMO_TOKEN = 'abc123';
-
-var DEMO_USER = {
-  id: '123',
-  username: 'demo',
-  fullName: 'Mary Smith'
-};
 
 var UserService = {
   init: function() {
@@ -15,17 +10,24 @@ var UserService = {
 
   login: function(username, password) {
     var self = this;
+
+    // Success
+    if (username === 'demo' && password === 'demo') {
+      self._saveSession(DEMO_TOKEN);
+      return storage.get('/user')
+        .then(function(user) {
+          return {
+            token: DEMO_TOKEN,
+            user: user
+          };
+        });
+    }
+
+    // Fail
     var deferred = Promise.defer();
     setTimeout(function() {
-      if (username !== 'demo' || password !== 'demo') {
-        return deferred.reject({message: 'Wrong username or password'});
-      }
-      self._saveSession(DEMO_TOKEN);
-      deferred.resolve({
-        token: DEMO_TOKEN,
-        user: DEMO_USER
-      });
-    }, 1000);
+      deferred.reject({message: 'Wrong username or password'});
+    }, storage.DELAY);
     return deferred.promise;
   },
 
@@ -35,23 +37,24 @@ var UserService = {
     setTimeout(function() {
       self._destroySession();
       deferred.resolve();
-    }, 1000);
+    }, storage.DELAY);
     return deferred.promise;
   },
 
   _loadSession: function() {
     var token = window.localStorage.getItem('authToken');
-    var deferred = Promise.defer();
-    setTimeout(function() {
-      if (!token) {
-        return deferred.resolve();
-      }
-      deferred.resolve({
-        token: token,
-        user: DEMO_USER
+
+    if (!token) {
+      return Promise.resolve();
+    }
+
+    return storage.get('/user', {delay: 200})
+      .then(function(user) {
+        return {
+          token: token,
+          user: user
+        };
       });
-    }, 200);
-    return deferred.promise;
   },
 
   _destroySession: function() {
@@ -60,6 +63,27 @@ var UserService = {
 
   _saveSession: function(token) {
     window.localStorage.setItem('authToken', token);
+  },
+
+  update: function(token, attributes) {
+    var deferred = Promise.defer();
+
+    // Only support updating fullName for this demo
+    var fullName = attributes.fullName;
+    if (!(fullName && fullName.length)) {
+      var deferred = Promise.defer();
+      setTimeout(function() {
+        deferred.reject({message: 'Full name must not be empty'});
+      }, storage.DELAY);
+      return deferred.promise;
+    }
+
+    return storage.put('/user', {fullName: fullName})
+      .then(function(user) {
+        return {
+          user: user
+        };
+      });
   }
 };
 
