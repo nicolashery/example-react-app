@@ -2,7 +2,7 @@ var React = require('react');
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
 
-var debug = require('debug')('app:LoginForm');
+var debug = require('bows')('LoginForm');
 
 var LoginForm = React.createClass({
   getInitialState: function() {

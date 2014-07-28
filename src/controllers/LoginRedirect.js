@@ -1,7 +1,7 @@
 var React = require('react');
 var RouterStore = require('../router/RouterStore');
 
-var debug = require('debug')('app:LoginRedirect');
+var debug = require('bows')('LoginRedirect');
 
 var LoginRedirect = React.createClass({
   getInitialState: function() {

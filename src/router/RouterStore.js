@@ -6,7 +6,7 @@ var RouterActions = require('./RouterActions');
 var UserConstants = require('../user/UserConstants');
 var UserStore = require('../user/UserStore');
 
-var debug = require('debug')('app:RouterStore');
+var debug = require('bows')('RouterStore');
 
 module.exports = Fluxy.createStore({
   getInitialState: function() {

@@ -4,7 +4,7 @@ var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
 var helpers = require('../helpers');
 
-var debug = require('debug')('app:AccountForm');
+var debug = require('bows')('AccountForm');
 
 var AccountForm = React.createClass({
   getInitialState: function() {

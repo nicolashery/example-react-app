@@ -56,4 +56,4 @@ Point your browser to `http://localhost:8080`.
 
 ### Debugging
 
-Enable the app's debug output by typing `$debug.enable('*')` in the browser's console and refreshing the page.
+To enable logging, set `localStorage.debug = true` in the browser's console and refresh the page.

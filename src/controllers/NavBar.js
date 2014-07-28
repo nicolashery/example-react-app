@@ -6,7 +6,7 @@ var UserActions = require('../user/UserActions');
 var NavLink = require('./NavLink');
 var Link = require('./Link');
 
-var debug = require('debug')('app:NavBar');
+var debug = require('bows')('NavBar');
 
 var NavBar = React.createClass({
   propTypes: {

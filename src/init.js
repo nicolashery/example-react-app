@@ -3,7 +3,7 @@ var storage = require('./storage');
 var UserService = require('./user/UserService');
 var UserStore = require('./user/UserStore');
 
-var debug = require('debug')('app:init');
+var debug = require('bows')('init');
 
 var init = function() {
   storage.load();

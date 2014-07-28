@@ -5,7 +5,7 @@ var routingTable = require('./routes/table');
 
 require('./App.less');
 
-var debug = require('debug')('app:App');
+var debug = require('bows')('App');
 
 var App = React.createClass({
   getInitialState: function() {
