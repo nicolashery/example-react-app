@@ -49,19 +49,20 @@ var AccountForm = React.createClass({
 
   render: function() {
     debug('render');
-    var user = $.clj_to_js(this.state.user) || {};
-
+    var user = this.state.user;
     return (
       <div>
         <form>
           <div className="form-group">
-            <input className="form-control" ref="username" placeholder="username" defaultValue={user.username}/>
+            <input className="form-control" ref="username" placeholder="username"
+              defaultValue={$.get(user, 'username')}/>
           </div>
           <div className="form-group">
             <input className="form-control" ref="password" placeholder="password"/>
           </div>
           <div className="form-group">
-            <input className="form-control" ref="fullName" placeholder="fullName" defaultValue={user.fullName}/>
+            <input className="form-control" ref="fullName" placeholder="fullName"
+              defaultValue={$.get(user, 'fullName')}/>
           </div>
           {this.renderSubmitButton()}
           {' '}
@@ -123,10 +124,10 @@ var AccountForm = React.createClass({
   handleReset: function(e) {
     debug('handleReset');
     e.preventDefault();
-    var user = $.clj_to_js(this.state.user) || {};
-    this.refs.username.getDOMNode().value = user.username;
+    var user = this.state.user;
+    this.refs.username.getDOMNode().value = $.get(user, 'username');
     this.refs.password.getDOMNode().value = '';
-    this.refs.fullName.getDOMNode().value = user.fullName;
+    this.refs.fullName.getDOMNode().value = $.get(user, 'fullName');
   },
 
   renderError: function() {
