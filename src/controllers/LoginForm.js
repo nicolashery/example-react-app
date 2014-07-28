@@ -1,4 +1,5 @@
 var React = require('react');
+var $ = require('fluxy').$;
 var UserActions = require('../user/UserActions');
 var UserStore = require('../user/UserStore');
 
@@ -14,18 +15,23 @@ var LoginForm = React.createClass({
   },
 
   componentDidMount: function () {
-    debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
   },
 
   componentWillUnmount: function () {
-    debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
     UserActions.clearRequests();
   },
 
+  shouldComponentUpdate: function(nextProps, nextState) {
+    var state = this.state;
+    return !(
+      $.equals(state.working, nextState.working) &&
+      $.equals(state.errorMessage, nextState.errorMessage)
+    );
+  },
+
   handleUserStoreChange: function() {
-    debug('handleUserStoreChange');
     this.setState(this.getUserStoreState());
   },
 

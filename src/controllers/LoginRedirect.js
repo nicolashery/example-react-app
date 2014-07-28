@@ -1,4 +1,5 @@
 var React = require('react');
+var $ = require('fluxy').$;
 var RouterStore = require('../router/RouterStore');
 
 var debug = require('bows')('LoginRedirect');
@@ -9,13 +10,16 @@ var LoginRedirect = React.createClass({
   },
 
   componentDidMount: function () {
-    debug('componentDidMount');
     RouterStore.addWatch(this.handleRouterStoreChange);
   },
 
   componentWillUnmount: function () {
-    debug('componentWillUnmount');
     RouterStore.removeWatch(this.handleRouterStoreChange);
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    var state = this.state;
+    return !$.equals(state.redirectUri, nextState.redirectUri);
   },
 
   handleRouterStoreChange: function(keys, oldState, newState) {
@@ -24,8 +28,6 @@ var LoginRedirect = React.createClass({
     if (keys !== 'redirectUri') {
       return;
     }
-
-    debug('handleRouterStoreChange');
     this.setState(this.getRouterStoreState());
   },
 

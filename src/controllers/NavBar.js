@@ -20,22 +20,33 @@ var NavBar = React.createClass({
   },
 
   componentWillMount: function() {
+    debug('componentWillMount');
     UserActions.clearRequests();
   },
 
   componentDidMount: function () {
-    debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
   },
 
   componentWillUnmount: function () {
-    debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
     UserActions.clearRequests();
   },
 
-  handleUserStoreChange: function() {
-    debug('handleUserStoreChange');
+  shouldComponentUpdate: function(nextProps, nextState) {
+    var props = this.props;
+    var state = this.state;
+    return !(
+      props.activePath === nextProps.activePath &&
+      // Note: not checking for `noAuthLinks` & `authLinks`
+      // as they are only defined once
+      $.equals(state.isAuthenticated, nextState.isAuthenticated) &&
+      $.equals(state.user, nextState.user) &&
+      $.equals(state.loggingOut, nextState.loggingOut)
+    );
+  },
+
+  handleUserStoreChange: function(keys) {
     this.setState(this.getUserStoreState());
   },
 

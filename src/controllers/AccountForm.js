@@ -16,18 +16,25 @@ var AccountForm = React.createClass({
   },
 
   componentDidMount: function () {
-    debug('componentDidMount');
     UserStore.addWatch(this.handleUserStoreChange);
   },
 
   componentWillUnmount: function () {
-    debug('componentWillUnmount');
     UserStore.removeWatch(this.handleUserStoreChange);
     UserActions.clearRequests();
   },
 
-  handleUserStoreChange: function() {
-    debug('handleUserStoreChange');
+  shouldComponentUpdate: function(nextProps, nextState) {
+    var state = this.state;
+    return !(
+      $.equals(state.user, nextState.user) &&
+      $.equals(state.working, nextState.working) &&
+      $.equals(state.errorMessage, nextState.errorMessage) &&
+      $.equals(state.success, nextState.success)
+    );
+  },
+
+  handleUserStoreChange: function(keys) {
     this.setState(this.getUserStoreState());
   },
 

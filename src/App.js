@@ -13,20 +13,22 @@ var App = React.createClass({
   },
 
   componentDidMount: function () {
-    debug('componentDidMount');
     RouterStore.addWatch(this.handleRouterStoreChange);
   },
 
   componentWillUnmount: function () {
-    debug('componentWillUnmount');
     RouterStore.removeWatch(this.handleRouterStoreChange);
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    var state = this.state;
+    return !$.equals(state.route, nextState.route);
   },
 
   handleRouterStoreChange: function(keys, oldState, newState) {
     if (keys !== 'route') {
       return;
     }
-    debug('handleRouterStoreChange');
     this.setState(this.getRouterStoreState());
   },
 
