@@ -1,8 +1,16 @@
 var React = require('react');
 var Layout = require('../layouts/DefaultLayout');
 var nav = require('./nav');
+var TagActions = require('../tags/TagActions');
+var UserStore = require('../user/UserStore');
+var TagCountList = require('../controllers/TagCountList');
 
 var DashboardPage = React.createClass({
+  componentWillMount: function() {
+    TagActions.clearRequests();
+    TagActions.fetch(UserStore.token());
+  },
+
   render: function() {
     return <Layout
       header={this.renderNav()}
@@ -16,7 +24,9 @@ var DashboardPage = React.createClass({
   },
 
   renderContent: function() {
-    return 'Dashboard';
+    return (
+      <TagCountList />
+    );
   }
 });
 

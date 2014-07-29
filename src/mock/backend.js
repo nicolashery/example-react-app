@@ -11,10 +11,7 @@ var backend = {};
 
 var INITIAL_DB = {
   user: data.user,
-  items: fn.reduce(function(acc, item) {
-    acc[item.id] = item;
-    return acc;
-  }, {}, data.items)
+  items: data.items
 };
 
 // Fake HTTP request delay, in milliseconds
@@ -100,10 +97,13 @@ backend.get = function(resource, token) {
   }
 
   var keys = this._resourceToKeys(resource);
-  var data = mori.js_to_clj(data);
 
   if (mori.equals(mori.vector('user'), keys)) {
     return this._getUser();
+  }
+
+  if (mori.equals(mori.vector('tags'), keys)) {
+    return this._fetchTags();
   }
 
   return this._notFound();
@@ -189,5 +189,30 @@ backend._updateUser = function(attributes) {
   this._persist();
   return this._send(user);
 };
+
+// Tags
+// ==============================================
+
+backend._fetchTags = function() {
+  debug('_fetchTags');
+  var items = mori.get(this._db, 'items');
+  var allItemTags = mori.mapcat(x => mori.get(x, 'tags'), items);
+
+  var tagsById = mori.group_by(x => mori.get(x, 'id'), allItemTags);
+  var countInMap = function(acc, key, val) {
+    return mori.assoc(acc, key, mori.count(val));
+  };
+  var tagsCountById = mori.reduce_kv(countInMap, mori.hash_map(), tagsById);
+
+  var tags = mori.map(function(val) {
+    var id = mori.get(val, 0);
+    var tag = mori.first(mori.get(val, 1));
+    var itemCount = mori.get(tagsCountById, id);
+    return mori.assoc(tag, 'itemCount', itemCount);
+  }, tagsById);
+
+  return this._send(tags);
+};
+
 
 module.exports = backend;

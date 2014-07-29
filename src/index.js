@@ -26,6 +26,8 @@ init().then(function() {
 
   window.Fluxy = Fluxy;
   window.mori = Fluxy.$;
+  app.backend = require('./mock/backend');
   app.RouterStore = require('./router/RouterStore');
   app.UserStore = require('./user/UserStore');
+  app.TagStore = require('./tags/TagStore');
 });
