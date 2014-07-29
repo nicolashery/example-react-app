@@ -1,12 +1,12 @@
 var $ = require('fluxy').$;
-var storage = require('./storage');
+var backend = require('./mock/backend');
 var UserService = require('./user/UserService');
 var UserStore = require('./user/UserStore');
 
 var debug = require('bows')('init');
 
 var init = function() {
-  storage.load();
+  backend.init();
 
   return UserService.init().then(function(result) {
     result = result || {};

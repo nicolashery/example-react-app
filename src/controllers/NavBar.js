@@ -20,7 +20,6 @@ var NavBar = React.createClass({
   },
 
   componentWillMount: function() {
-    debug('componentWillMount');
     UserActions.clearRequests();
   },
 

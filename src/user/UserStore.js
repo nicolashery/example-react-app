@@ -76,7 +76,7 @@ module.exports = Fluxy.createStore({
     [UserConstants.LOGIN_FAIL, function(payload) {
       this.set('loginRequest', function(request) {
         return $.assoc(request,
-          'status', 'success',
+          'status', 'error',
           'error', $.js_to_clj(payload.error)
         );
       });

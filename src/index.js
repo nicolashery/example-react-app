@@ -26,7 +26,6 @@ init().then(function() {
 
   window.Fluxy = Fluxy;
   window.mori = Fluxy.$;
-  app.storage = require('./storage');
   app.RouterStore = require('./router/RouterStore');
   app.UserStore = require('./user/UserStore');
 });

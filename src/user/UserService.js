@@ -1,7 +1,5 @@
 var Promise = require('bluebird');
-var storage = require('../storage');
-
-var DEMO_TOKEN = 'abc123';
+var backend = require('../mock/backend');
 
 var UserService = {
   init: function() {
@@ -11,34 +9,32 @@ var UserService = {
   login: function(username, password) {
     var self = this;
 
-    // Success
-    if (username === 'demo' && password === 'demo') {
-      self._saveSession(DEMO_TOKEN);
-      return storage.get('/user')
-        .then(function(user) {
-          return {
-            token: DEMO_TOKEN,
-            user: user
-          };
-        });
-    }
+    return backend.post('/login', null, {
+      username: username,
+      password: password
+    })
+    .then(function(resp) {
+      if (resp.status !== 200) {
+        return Promise.reject(resp.body);
+      }
 
-    // Fail
-    var deferred = Promise.defer();
-    setTimeout(function() {
-      deferred.reject({message: 'Wrong username or password'});
-    }, storage.DELAY);
-    return deferred.promise;
+      self._saveSession(resp.body && resp.body.token);
+      return resp.body;
+    });
   },
 
-  logout: function() {
+  logout: function(token) {
     var self = this;
-    var deferred = Promise.defer();
-    setTimeout(function() {
+
+    return backend.post('/logout', token)
+    .then(function(resp) {
+      if (resp.status !== 200) {
+        return Promise.reject(resp.body);
+      }
+
       self._destroySession();
-      deferred.resolve();
-    }, storage.DELAY);
-    return deferred.promise;
+      return resp.body;
+    });
   },
 
   _loadSession: function() {
@@ -48,13 +44,22 @@ var UserService = {
       return Promise.resolve();
     }
 
-    return storage.get('/user', {delay: 200})
-      .then(function(user) {
-        return {
-          token: token,
-          user: user
-        };
-      });
+    var originalDelay = backend.DELAY;
+    backend.DELAY = 300;
+    return backend.get('/user', token)
+    .then(function(resp) {
+      backend.DELAY = originalDelay;
+
+      if (resp.status !== 200) {
+        // Not a valid token, return empty session
+        return Promise.resolve();
+      }
+
+      return {
+        token: token,
+        user: resp.body
+      };
+    });
   },
 
   _destroySession: function() {
@@ -71,19 +76,17 @@ var UserService = {
     // Only support updating fullName for this demo
     var fullName = attributes.fullName;
     if (!(fullName && fullName.length)) {
-      var deferred = Promise.defer();
-      setTimeout(function() {
-        deferred.reject({message: 'Full name must not be empty'});
-      }, storage.DELAY);
-      return deferred.promise;
+      return Promise.reject({message: 'Full name must not be empty'});
     }
 
-    return storage.put('/user', {fullName: fullName})
-      .then(function(user) {
-        return {
-          user: user
-        };
-      });
+    return backend.put('/user', token, {fullName: fullName})
+    .then(function(resp) {
+      if (resp.status !== 200) {
+        return Promise.reject(resp.body);
+      }
+
+      return resp.body;
+    });
   }
 };
 

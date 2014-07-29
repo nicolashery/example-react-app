@@ -38,9 +38,7 @@ module.exports = Fluxy.createActions({
 
     UserService.update(token, attributes)
       .then(function (result) {
-        self.dispatchAction(UserConstants.USER_UPDATE_SUCCESS, {
-          user: result.user
-        });
+        self.dispatchAction(UserConstants.USER_UPDATE_SUCCESS, {user: result});
       })
       .catch(function (err) {
         self.dispatchAction(UserConstants.USER_UPDATE_FAIL, {error: err});
