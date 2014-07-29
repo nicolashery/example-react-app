@@ -24,7 +24,8 @@ init().then(function() {
   RouterService.start();
   window.app = React.renderComponent(<App />, document.body);
 
-  window.mori = require('fluxy').$;
+  window.Fluxy = Fluxy;
+  window.mori = Fluxy.$;
   app.storage = require('./storage');
   app.RouterStore = require('./router/RouterStore');
   app.UserStore = require('./user/UserStore');

@@ -3,6 +3,8 @@ var $ = Fluxy.$;
 var UserConstants = require('./UserConstants');
 
 module.exports = Fluxy.createStore({
+  name: 'UserStore',
+
   getInitialState: function() {
     return {
       token: null,
@@ -57,15 +59,15 @@ module.exports = Fluxy.createStore({
     [UserConstants.LOGIN, function(payload) {
       this.set('token', null);
       this.set('user', null);
-      this.set('loginRequest', $.js_to_clj({
+      this.setFromJS('loginRequest',{
         status: 'pending',
         payload: payload
-      }));
+      });
     }],
 
     [UserConstants.LOGIN_SUCCESS, function(payload) {
       this.set('token', payload.token);
-      this.set('user', $.js_to_clj(payload.user));
+      this.setFromJS('user', payload.user);
       this.set('loginRequest', function(request) {
         return $.assoc(request, 'status', 'success');
       });
@@ -81,10 +83,10 @@ module.exports = Fluxy.createStore({
     }],
 
     [UserConstants.LOGOUT, function(payload) {
-      this.set('logoutRequest', $.js_to_clj({
+      this.setFromJS('logoutRequest', {
         status: 'pending',
         payload: payload
-      }));
+      });
     }],
 
     [UserConstants.LOGOUT_SUCCESS, function(payload) {
@@ -105,14 +107,14 @@ module.exports = Fluxy.createStore({
     }],
 
     [UserConstants.USER_UPDATE, function(payload) {
-      this.set('updateRequest', $.js_to_clj({
+      this.setFromJS('updateRequest', {
         status: 'pending',
         payload: payload
-      }));
+      });
     }],
 
     [UserConstants.USER_UPDATE_SUCCESS, function(payload) {
-      this.set('user', $.js_to_clj(payload.user));
+      this.setFromJS('user', payload.user);
       this.set('updateRequest', function(request) {
         return $.assoc(request, 'status', 'success');
       });

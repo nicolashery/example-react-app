@@ -13,7 +13,7 @@ var init = function() {
     // Usually you never set store data directly (only through actions)
     // but making an exception here for the init method?
     UserStore.set('token', result.token);
-    UserStore.set('user', $.js_to_clj(result.user));
+    UserStore.setFromJS('user', result.user);
     debug('complete');
     return true;
   });

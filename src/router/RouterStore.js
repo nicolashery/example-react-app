@@ -9,6 +9,8 @@ var UserStore = require('../user/UserStore');
 var debug = require('bows')('RouterStore');
 
 module.exports = Fluxy.createStore({
+  name: 'RouterStore',
+
   getInitialState: function() {
     return {
       route: null,
@@ -44,7 +46,7 @@ module.exports = Fluxy.createStore({
     }
     else if (routeRequiresAuth && !userIsAuthenticated) {
       debug('not logged in, redirecting');
-      this.set('redirectAfterLogin', $.js_to_clj(route));
+      this.setFromJS('redirectAfterLogin', route);
       route = RouterService.defaultNoAuthRoute();
     }
     else if (!routeRequiresAuth && userIsAuthenticated) {
@@ -54,7 +56,7 @@ module.exports = Fluxy.createStore({
 
     RouterService.updateBrowserUri(route);
 
-    this.set('route', $.js_to_clj(route));
+    this.setFromJS('route', route);
   },
 
   actions: [
