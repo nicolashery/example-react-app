@@ -1,11 +1,15 @@
 var React = require('react');
 var $ = require('fluxy').$;
+var fn = require('fn.js');
 var TagActions = require('../tags/TagActions');
 var TagStore = require('../tags/TagStore');
 
+var SectionTitle = require('../components/SectionTitle');
+var TagList = require('../components/TagList');
+
 var debug = require('bows')('TagCountList');
 
-var TagCountList = React.createClass({
+var DashboardTagsWidget = React.createClass({
   getInitialState: function() {
     return this.getTagStoreState();
   },
@@ -39,12 +43,31 @@ var TagCountList = React.createClass({
 
   render: function() {
     debug('render');
+    var content;
 
     if (this.state.loading) {
-      return this.renderLoading();
+      content = this.renderLoading();
+    }
+    else {
+      content = this.renderTags();
     }
 
-    return this.renderTags();
+    return (
+      <div>
+        {this.renderTitle()}
+        {content}
+      </div>
+    );
+  },
+
+  renderTitle: function() {
+    var countNode;
+    var count = $.count(this.state.tags);
+    if (count) {
+      countNode = <span>{' (' + count + ')'}</span>;
+    }
+
+    return <SectionTitle>{'Tags'}{countNode}</SectionTitle>;
   },
 
   renderLoading: function() {
@@ -56,8 +79,10 @@ var TagCountList = React.createClass({
       return <div>No tags yet</div>;
     }
 
-    return <div>{JSON.stringify(mori.clj_to_js(this.state.tags))}</div>;
+    var tags = $.clj_to_js(this.state.tags);
+
+    return <TagList tags={tags} />;
   }
 });
 
-module.exports = TagCountList;
+module.exports = DashboardTagsWidget;

@@ -3,7 +3,7 @@ var Layout = require('../layouts/DefaultLayout');
 var nav = require('./nav');
 var TagActions = require('../tags/TagActions');
 var UserStore = require('../user/UserStore');
-var TagCountList = require('../controllers/TagCountList');
+var DashboardTagsWidget = require('../controllers/DashboardTagsWidget');
 
 var DashboardPage = React.createClass({
   componentWillMount: function() {
@@ -25,7 +25,7 @@ var DashboardPage = React.createClass({
 
   renderContent: function() {
     return (
-      <TagCountList />
+      <DashboardTagsWidget />
     );
   }
 });
