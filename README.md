@@ -6,10 +6,11 @@ Exploring ways to organize an app built with [React](http://facebook.github.io/r
 
 App:
 
-- [React](http://facebook.github.io/react)
-- [Fluxy](https://github.com/jmreidy/fluxy) ([Flux](http://facebook.github.io/react/docs/flux-overview.html) framework)
-- [Mori](http://swannodette.github.io/mori/) (immutable data)
-- [Bluebird](https://github.com/petkaantonov/bluebird/) (promises)
+- [React](http://facebook.github.io/react) (rendering engine)
+- [Fluxy](https://github.com/jmreidy/fluxy) ([Flux](http://facebook.github.io/react/docs/flux-overview.html) architecture for data flow)
+- [Mori](http://swannodette.github.io/mori/) (immutable data and functional programming)
+- [Bluebird](https://github.com/petkaantonov/bluebird/) (promises for async things)
+- [fn.js](http://eliperelman.com/fn.js/) (functional programming for plain JavaScript)
 
 Development:
 

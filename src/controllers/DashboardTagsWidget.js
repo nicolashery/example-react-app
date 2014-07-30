@@ -7,7 +7,7 @@ var TagStore = require('../tags/TagStore');
 var SectionTitle = require('../components/SectionTitle');
 var TagList = require('../components/TagList');
 
-var debug = require('bows')('TagCountList');
+var debug = require('bows')('DashboardTagsWidget');
 
 var DashboardTagsWidget = React.createClass({
   getInitialState: function() {
