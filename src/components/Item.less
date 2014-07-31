@@ -1,0 +1,42 @@
+.Item {
+  display: block;
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+}
+
+.Item-title {
+  margin-bottom: 5px;
+}
+
+.Item-name {
+  display: inline-block;
+  font-size: 18px;
+  line-height: 22px; // Match tag height
+  font-weight: bold;
+  color: #333;
+}
+
+.Item-tags {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.Item-date {
+  font-size: 12px;
+  line-height: 1;
+  color: #777;
+}
+
+.Item-text {
+  // Use margin-top on this element vs. the item header
+  // because if no text we want the header to stick to the bottom of the box
+  margin-top: 10px;
+}
+
+.Item.is-short .Item-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

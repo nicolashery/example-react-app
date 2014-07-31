@@ -106,6 +106,10 @@ backend.get = function(resource, token) {
     return this._fetchTags();
   }
 
+  if (mori.equals(mori.vector('items'), keys)) {
+    return this._fetchItems();
+  }
+
   return this._notFound();
 };
 
@@ -214,5 +218,19 @@ backend._fetchTags = function() {
   return this._send(tags);
 };
 
+// Items
+// ==============================================
+
+backend._fetchItems = function() {
+  debug('_fetchItems');
+  var items = mori.get(this._db, 'items');
+  var count = mori.count(items);
+  var result = mori.hash_map(
+    'count', count,
+    'items', items
+  );
+
+  return this._send(result);
+};
 
 module.exports = backend;

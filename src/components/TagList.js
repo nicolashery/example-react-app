@@ -1,4 +1,4 @@
-var React = window.React = require('react');
+var React = require('react');
 var Tag = require('./Tag');
 
 require('./TagList.less');

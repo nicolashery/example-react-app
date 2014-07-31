@@ -1,7 +1,5 @@
 var React = require('react');
 var $ = require('fluxy').$;
-var fn = require('fn.js');
-var TagActions = require('../tags/TagActions');
 var TagStore = require('../tags/TagStore');
 
 var SectionTitle = require('../components/SectionTitle');

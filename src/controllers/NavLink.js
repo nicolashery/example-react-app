@@ -1,4 +1,4 @@
-var React = window.React = require('react');
+var React = require('react');
 var Link = require('./Link');
 
 var NavLink = React.createClass({
