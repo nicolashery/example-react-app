@@ -39,10 +39,6 @@ module.exports = Fluxy.createStore({
           'error', $.js_to_clj(payload.error)
         );
       });
-    }],
-
-    [TagConstants.TAGS_CLEAR_REQUESTS, function() {
-      this.set('fetchRequest', null);
     }]
   ]
 });

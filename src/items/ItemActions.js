@@ -14,9 +14,5 @@ module.exports = Fluxy.createActions({
       .catch(function (err) {
         self.dispatchAction(ItemConstants.ITEMS_FETCH_FAIL, {error: err});
       });
-  },
-
-  clearRequests: function() {
-    this.dispatchAction(ItemConstants.ITEMS_CLEAR_REQUESTS);
   }
 });

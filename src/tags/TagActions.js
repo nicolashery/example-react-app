@@ -14,9 +14,5 @@ module.exports = Fluxy.createActions({
       .catch(function (err) {
         self.dispatchAction(TagConstants.TAGS_FETCH_FAIL, {error: err});
       });
-  },
-
-  clearRequests: function() {
-    this.dispatchAction(TagConstants.TAGS_CLEAR_REQUESTS);
   }
 });

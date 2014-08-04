@@ -11,9 +11,7 @@ require('./DashboardPage.less');
 
 var DashboardPage = React.createClass({
   componentWillMount: function() {
-    TagActions.clearRequests();
     TagActions.fetch(UserStore.token());
-    ItemActions.clearRequests();
     ItemActions.fetch(UserStore.token());
   },
 

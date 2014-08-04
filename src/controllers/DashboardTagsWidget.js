@@ -40,7 +40,7 @@ var DashboardTagsWidget = React.createClass({
   },
 
   render: function() {
-    debug('render');
+    debug('render', $.clj_to_js(this.state));
     var content;
 
     if (this.state.loading) {
