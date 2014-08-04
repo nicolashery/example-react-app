@@ -1,5 +1,5 @@
 var React = require('react');
-var RouterActions = require('../router/RouterActions');
+var RouterService = require('../router/RouterService');
 
 var Link = React.createClass({
   propTypes: {
@@ -10,13 +10,12 @@ var Link = React.createClass({
 
   render: function() {
     return this.transferPropsTo(
-      <a href="#" onClick={this.handleClick}>{this.props.children}</a>
+      <a href={this.getHref()}>{this.props.children}</a>
     );
   },
 
-  handleClick: function(e) {
-    e.preventDefault();
-    RouterActions.navigateTo({
+  getHref: function() {
+    return '#' + RouterService.uriFromRoute({
       path: this.props.path,
       params: this.props.params,
       query: this.props.query

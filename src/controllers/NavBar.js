@@ -4,7 +4,7 @@ var $ = require('fluxy').$;
 var UserStore = require('../user/UserStore');
 var UserActions = require('../user/UserActions');
 var NavLink = require('./NavLink');
-var Link = require('./Link');
+var Link = require('../router/Link');
 
 var debug = require('bows')('NavBar');
 
