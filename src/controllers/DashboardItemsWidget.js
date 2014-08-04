@@ -1,6 +1,7 @@
 var React = require('react');
 var $ = require('fluxy').$;
 var ItemStore = require('../items/ItemStore');
+var tagWithLink = require('../tags/tagWithLink');
 
 var SectionTitle = require('../components/SectionTitle');
 var ItemList = require('../components/ItemList');
@@ -83,7 +84,8 @@ var DashboardItemsWidget = React.createClass({
       return <div>No items yet</div>;
     }
 
-    var items = $.take(this.MAX_NUMBER_OF_ITEMS, this.state.items);
+    var items = this.itemsWithLinks();
+    items = $.take(this.MAX_NUMBER_OF_ITEMS, items);
     items = $.clj_to_js(items);
 
     return (
@@ -96,9 +98,17 @@ var DashboardItemsWidget = React.createClass({
     );
   },
 
+  itemsWithLinks: function() {
+    return $.map(function(item) {
+      if (!$.count($.get(item, 'tags'))) {
+        return item;
+      }
+      return $.assoc(item, 'tags', $.map(tagWithLink, $.get(item, 'tags')));
+    }, this.state.items);
+  },
+
   renderAllItemsLink: function() {
-    // TODO
-    return <a href="#">See all items</a>;
+    return <a href="#/items">See all items</a>;
   }
 });
 

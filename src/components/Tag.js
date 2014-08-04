@@ -20,6 +20,15 @@ var Tag = React.createClass({
       itemCount = <span>{' (' + tag.itemCount + ')'}</span>;
     }
 
+    if (tag.href) {
+      return (
+        <a className="Tag Tag--link" style={style} href={tag.href}>
+          {tag.name}
+          {itemCount}
+        </a>
+      );
+    }
+
     return (
       <div className="Tag" style={style}>
         {tag.name}

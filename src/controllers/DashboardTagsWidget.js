@@ -1,6 +1,7 @@
 var React = require('react');
 var $ = require('fluxy').$;
 var TagStore = require('../tags/TagStore');
+var tagWithLink = require('../tags/tagWithLink');
 
 var SectionTitle = require('../components/SectionTitle');
 var TagList = require('../components/TagList');
@@ -77,9 +78,14 @@ var DashboardTagsWidget = React.createClass({
       return <div>No tags yet</div>;
     }
 
-    var tags = $.clj_to_js(this.state.tags);
+    var tags = this.tagsWithLink();
+    tags = $.clj_to_js(tags);
 
     return <TagList tags={tags} />;
+  },
+
+  tagsWithLink: function() {
+    return $.map(tagWithLink, this.state.tags);
   }
 });
 
